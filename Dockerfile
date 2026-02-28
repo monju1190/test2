@@ -1,36 +1,29 @@
-# Multi-stage Dockerfile for Flatris
-# 1. Build stage
-FROM node:10-alpine as builder
-
-WORKDIR /app
-
-# Copy package.json and yarn.lock (if exists)
-COPY package.json yarn.lock* ./
-
-# Install dependencies
-# Note: Node 10 is quite old, but needed for this specific version of Flatris
-RUN yarn install --frozen-lockfile || npm install
-
-# Copy source
-COPY . .
-
-# Build the web app
-RUN npm run build
-
-# 2. Production stage
+# Single-stage Dockerfile for stability with Node 10
 FROM node:10-alpine
 
 WORKDIR /app
 
-# Copy built assets and server code
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/server ./server
-COPY --from=builder /app/web ./web
-COPY --from=builder /app/shared ./shared
+# Install system dependencies for native modules and build tools
+RUN apk add --no-cache python make g++ git
 
-# Expose the port the app runs on (usually 3000 for Next.js/Express)
+# Copy dependency files first
+COPY package.json yarn.lock* ./
+
+# Install ALL dependencies (including devDependencies for babel-node)
+RUN yarn install --frozen-lockfile || npm install
+
+# Copy the rest of the source code
+COPY . .
+
+# Build the Next.js web app
+RUN npm run build
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Expose the port
 EXPOSE 3000
 
-# Start the production server
+# Start the production server using babel-node as specified in package.json
 CMD ["npm", "start"]
