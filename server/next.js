@@ -28,5 +28,6 @@ export async function startNextApp(
     return nextHandler(req, res);
   });
 
-  startServer(server, 3000);
+  const port = parseInt(process.env.PORT, 10) || 3000;
+  startServer(server, port);
 }
