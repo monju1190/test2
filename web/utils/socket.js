@@ -13,6 +13,7 @@ type GameRemovedHandler = (gameId: GameId) => void;
 type GameSyncHandler = (game: Game) => void;
 type StatsUpdateHandler = (stats: Stats) => void;
 
+let socket;
 let currentRoomId: ?RoomId;
 
 export function getSocket() {

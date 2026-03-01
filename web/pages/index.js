@@ -8,25 +8,18 @@ import { loadDashboard, stripGameEffects } from '../actions/global';
 import { addCurUserToState, getDashboard } from '../utils/api';
 import { SocketProvider } from '../components/socket/SocketProvider';
 import Layout from '../components/Layout';
-import Dashboard from '../components/pages/Dashboard';
+import NewGame from '../components/pages/NewGame';
 
 type Props = {};
 
 class IndexPage extends Component<Props> {
-  static async getInitialProps({ res, req, store }) {
-    if (res && req && (req.url === '/' || req.url === '/index')) {
-      res.writeHead(302, { Location: '/new' });
-      res.end();
-      return {};
-    }
-
-    const { dispatch } = store;
-
+  static async getInitialProps({ req, store }) {
     // Food for thought: How to not duplicate this on every page
     if (req) {
       await addCurUserToState(req, store);
     }
 
+    const { dispatch } = store;
     const dashboardState = await getDashboard();
     dispatch(loadDashboard(dashboardState));
 
@@ -43,7 +36,7 @@ class IndexPage extends Component<Props> {
         <ReactReduxContext.Consumer>
           {({ store }) => (
             <SocketProvider store={store}>
-              <Dashboard />
+              <NewGame />
             </SocketProvider>
           )}
         </ReactReduxContext.Consumer>
