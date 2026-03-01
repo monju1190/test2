@@ -17,7 +17,7 @@ let socket;
 
 export function getSocket() {
   if (!socket) {
-    socket = io(getApiUrl());
+    socket = io(getApiUrl(), { transports: ['websocket'] });
   }
 
   function subscribe(roomId: RoomId) {
