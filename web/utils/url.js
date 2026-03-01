@@ -12,5 +12,5 @@ export function getShareUrl(gameId: GameId) {
   // will return a disabled copy button.
   const { protocol, host } = window.location;
 
-  return `${protocol}//${host}/join/${gameId}`;
+  return `${protocol}//${host}/join?g=${gameId}`;
 }
