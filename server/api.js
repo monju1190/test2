@@ -19,6 +19,10 @@ import type { BackfillRequest, BackfillResponse } from 'shared/types/api';
 import type { SessionId } from './db';
 
 export function addRoutes(app: express$Application) {
+  app.get('/health', (req: express$Request, res: express$Response) => {
+    res.status(200).send('OK');
+  });
+
   app.get('/dashboard', async (req: express$Request, res: express$Response) => {
     try {
       res.json({

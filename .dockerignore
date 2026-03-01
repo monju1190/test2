@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+yarn-error.log
+.git
+.github
+.next
+out
+build
+temp_clone
+README.md
+Dockerfile
+.dockerignore
+implementation_plan.md
+task.md
+walkthrough.md
+interview_report.md

@@ -14,18 +14,12 @@ Also see [elm-flatris](https://github.com/w0rm/elm-flatris).
 
 ## Deployment
 
-This version of Flatris is configured for automated deployment to **AWS App Runner** via **GitHub Actions**.
-
-### Prerequisites
-1. **AWS ECR Repository**: Named `flatris`.
-2. **IAM User**: With `AmazonEC2ContainerRegistryFullAccess` and `AWSAppRunnerFullAccess`.
-3. **GitHub Secrets**:
-   - `AWS_ACCESS_KEY_ID`
-   - `AWS_SECRET_ACCESS_KEY`
-   - `AWS_APP_RUNNER_ROLE_ARN`: The ARN of the IAM role that App Runner uses to access ECR.
+This project is containerized with **Docker** and configured for automated deployment to **Render.com**.
 
 ### CI/CD Pipeline
-The pipeline is defined in `.github/workflows/deploy.yml`. It automatically:
-1. Builds the Docker image.
-2. Pushes to Amazon ECR.
-3. Deploys/Updates the AWS App Runner service.
+1. **CI (GitHub Actions)**: A build verification workflow ([ci.yml](.github/workflows/ci.yml)) runs on every push to ensure the code compiles successfully.
+2. **CD (Render)**: Render automatically detects changes in the `master` branch and initiates a zero-downtime deployment using the project's `Dockerfile`.
+
+### Architectural Highlights
+- **Environment Agnostic**: The application uses dynamic port binding through `process.env.PORT`, making it compatible with any cloud provider (AWS, GCP, Render).
+- **Legacy Stability**: Using a single-stage Docker build ensures all Node 10 and Babel dependencies are correctly bundled for production.
