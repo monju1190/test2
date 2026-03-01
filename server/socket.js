@@ -80,8 +80,12 @@ export function attachSocket(server: net$Server) {
           // As long as games receive actions they are marked as active
           bumpActiveGame(gameId);
 
-          socket.to(gameId).emit('game-action', action);
-          socket.to('global').emit('game-action', action);
+          // Using io.to(room) instead of socket.to(room) ensures that the
+          // message is sent to all clients in the room, which is more robust
+          // on cloud platforms like Render
+          console.log(`[SOCKET] Broadcasting action ${action.type} to room ${gameId}`);
+          io.to(gameId).emit('game-action', action);
+          io.to('global').emit('game-action', action);
 
           countTurns(game, prevGame);
           countControlAction(action);

@@ -13,15 +13,23 @@ type GameRemovedHandler = (gameId: GameId) => void;
 type GameSyncHandler = (game: Game) => void;
 type StatsUpdateHandler = (stats: Stats) => void;
 
-let socket;
+let currentRoomId: ?RoomId;
 
 export function getSocket() {
   if (!socket) {
     socket = io(getApiUrl(), { transports: ['websocket'] });
+
+    socket.on('reconnect', () => {
+      if (currentRoomId) {
+        console.log('[SOCKET] re-subscribing to', currentRoomId);
+        socket.emit('subscribe', currentRoomId);
+      }
+    });
   }
 
   function subscribe(roomId: RoomId) {
     console.log('[SOCKET] subscribe', roomId);
+    currentRoomId = roomId;
     socket.emit('subscribe', roomId);
   }
 
