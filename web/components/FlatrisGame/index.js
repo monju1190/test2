@@ -106,7 +106,11 @@ class FlatrisGame extends Component<Props, LocalState> {
 
   componentDidUpdate(prevProps) {
     const { game: prevGame } = prevProps;
-    const { curUser, game, appendPendingBlocks } = this.props;
+    const { curUser, game, subscribe, appendPendingBlocks } = this.props;
+
+    if (game.id !== prevGame.id) {
+      subscribe(game.id);
+    }
 
     if (curUser && isPlayer(game, curUser)) {
       if (allPlayersReady(game) && !allPlayersReady(prevGame)) {
@@ -388,8 +392,8 @@ class FlatrisGame extends Component<Props, LocalState> {
             left: 0;
             right: calc(100% / 16 * 6);
             background: ${showOverlay
-              ? 'rgba(236, 240, 241, 0.85)'
-              : 'transparent'};
+            ? 'rgba(236, 240, 241, 0.85)'
+            : 'transparent'};
           }
         `}</style>
       </div>

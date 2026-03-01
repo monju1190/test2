@@ -80,11 +80,8 @@ export function attachSocket(server: net$Server) {
           // As long as games receive actions they are marked as active
           bumpActiveGame(gameId);
 
-          socket.broadcast
-            .to(gameId)
-            // TODO: Filter which actions get sent to `global` if volume is high
-            .to('global')
-            .emit('game-action', action);
+          socket.to(gameId).emit('game-action', action);
+          socket.to('global').emit('game-action', action);
 
           countTurns(game, prevGame);
           countControlAction(action);
