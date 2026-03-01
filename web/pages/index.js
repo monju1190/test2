@@ -13,7 +13,13 @@ import Dashboard from '../components/pages/Dashboard';
 type Props = {};
 
 class IndexPage extends Component<Props> {
-  static async getInitialProps({ req, store }) {
+  static async getInitialProps({ res, req, store }) {
+    if (res && req && (req.url === '/' || req.url === '/index')) {
+      res.writeHead(302, { Location: '/new' });
+      res.end();
+      return {};
+    }
+
     const { dispatch } = store;
 
     // Food for thought: How to not duplicate this on every page
